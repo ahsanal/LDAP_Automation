@@ -1,0 +1,4 @@
+#[dex_p3]
+#khasru1c.mylabserver.com ansible_python_interpreter=/usr/bin/python3 #py_ver=py2
+[dex_p2]
+khasru1c.mylabserver.com 

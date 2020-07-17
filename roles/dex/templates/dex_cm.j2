@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dex
+  namespace: auth-system
+data:
+  config.yaml: |
+    issuer: https://auth.k8s.haiits.com/
+    storage:
+     type: sqlite3
+     config:
+      file: /web/themes/custom/dex.db
+    web:
+      http: 0.0.0.0:5556
+    frontend:
+      theme: custom
+    telemetry:
+      http: 0.0.0.0:5558
+    staticClients:
+    - id: oidc-auth-client
+      redirectURIs:
+      - 'http://kubectl.k8s.haiits.com/callback'
+      - 'http://dashboard.k8s.haiits.com/oauth2/callback'
+      name: 'oidc-auth-client'
+      secret: 'M2zO5HBVmkhBUaKy+T/Z5xIa+ixZsUIENsUzM75GZ7o='
+    connectors:
+    - type: ldap
+      id: ldap
+      name: LDAP
+      config:
+        host: 192.168.40.100:389
+        insecureNoSSL: true
+        insecureSkipVerify: true
+        bindDN: cn=Administrator,cn=Users,dc=haiits,dc=com
+        bindPW: 'Bismillah2580'
+        userSearch:
+          baseDN: cn=Users,dc=haiits,dc=com
+          filter: "(objectClass=user)"
+          username: sAMAccountName
+          idAttr: sAMAccountName
+          emailAttr: sAMAccountName
+          nameAttr: displayName
+    oauth2:
+      skipApprovalScreen: true
+

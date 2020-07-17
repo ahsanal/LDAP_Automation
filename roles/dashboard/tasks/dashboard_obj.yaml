@@ -1,0 +1,25 @@
+- name: Copying configmap template to kubernetes server
+  template:
+    src: "{{ item.name }}"
+    dest: "/tmp/{{ item.dest_file }}"
+  with_items:
+   - { name: dashboard_deploy.j2 , dest_file: dashboard_deploy.yaml }
+   - { name: dashboard_ingress.j2 , dest_file: dashboard_ingress.yaml }
+   - { name: outh2_proxy_deploy.j2, dest_file: outh2_proxy_deploy.yaml }
+   - { name: outh_proxy_svc.j2, dest_file: outh_proxy_svc.yaml }
+   - { name: outh2_proxy_ingress.j2, dest_file: outh2_proxy_ingress.yaml }
+   - { name: k8s_admin_group_rolebinding.j2, dest_file: k8s_admin_group_rolebinding.yaml }
+  when: py_ver2 is defined
+
+- name: Running configmap file to create configmap
+  k8s:
+    state: present
+    src: "/tmp/{{ item }}"
+  with_items:
+    - dashboard_deploy.yaml
+    - dashboard_ingress.yaml
+    - outh2_proxy_deploy.yaml
+    - outh_proxy_svc.yaml
+    - outh2_proxy_ingress.yaml
+    - k8s_admin_group_rolebinding.yaml
+  when: py_ver3 is defined

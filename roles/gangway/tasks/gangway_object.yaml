@@ -1,0 +1,21 @@
+- name: Copying configmap template to kubernetes server
+  template:
+    src: "{{ item.name }}"
+    dest: "/tmp/{{ item.dest_file }}"
+  with_items: 
+   - { name: gangway_cm.j2 , dest_file: gangway_cm.yaml }
+   - { name: gangway_deploy.j2 , dest_file: gangway_deploy.yaml }
+   - { name: gangway_ingress.j2, dest_file: gangway_ingress.yaml }
+   - { name: gangway_svc.j2 , dest_file: gangway_svc.yaml } 
+  when: py_ver2 is defined
+  
+- name: Running configmap file to create configmap
+  k8s:
+    state: present
+    src: "/tmp/{{ item }}"
+  with_items:
+   - gangway_cm.yaml
+   - gangway_deploy.yaml
+   - gangway_ingress.yaml
+   - gangway_svc.yaml
+  when: py_ver3 is defined

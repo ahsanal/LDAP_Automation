@@ -1,0 +1,102 @@
+---
+- name: Copying namespace template to kubernetes server
+  template:
+    src: dex-namespace.j2
+    dest: /tmp/dex-namespace.yaml
+  when: py_ver2 is defined
+ 
+- name: Running namespace file to create namespace
+  k8s:
+    state: present
+    src: /tmp/dex-namespace.yaml
+  when: py_ver3 is defined
+
+#- name: Creating namespace test
+#  k8s:
+#    name: auth-system
+#    api_version: v1
+#    kind: Namespace
+#    state: present
+######Creating Svc Account for dex#######
+- name: Copying Svc Account template to kubernetes server
+  template: 
+    src: dex_sa.j2
+    dest: /tmp/dex_sa.yaml
+  when: py_ver2 is defined
+
+- name: Creating service for dex
+  k8s: 
+    state: present
+    src: /tmp/dex_sa.yaml
+  when: py_ver3 is defined
+
+#######Creating ClusterRole######
+- name: Copying template to create ClusterRole
+  template: 
+    src: dex_cr.j2
+    dest: /tmp/dex_cr.yaml
+  when: py_ver2 is defined
+
+- name: Creating ClusterRole for dex
+  k8s: 
+   state: present
+   src: /tmp/dex_cr.yaml
+  when: py_ver3 is defined
+
+###########################################
+
+- name: Copying template to create ClusterRolebinding
+  template:
+    src: dex_crb.j2
+    dest: /tmp/dex_crb.yaml
+  when: py_ver2 is defined
+
+- name: Creating ClusterRolebinding for dex
+  k8s:
+   state: present
+   src: /tmp/dex_crb.yaml
+  when: py_ver3 is defined
+
+##################################################
+- name: Copying template to create configmap
+  template:
+    src: dex_cm.j2
+    dest: /tmp/dex_cm.yaml
+  when: py_ver2 is defined
+
+- name: Creating configmap for dex
+  k8s:
+   state: present
+   src: /tmp/dex_cm.yaml
+  when: py_ver3 is defined
+
+#####################################################
+
+- name: Copying template to create deployment
+  template:
+    src: dex_deploy.j2
+    dest: /tmp/dex_deploy.yaml
+  when: py_ver2 is defined
+
+- name: Creating deployment for dex
+  k8s:
+   state: present
+   src: /tmp/dex_deploy.yaml
+  when: py_ver3 is defined
+
+####################################################
+
+- name: Copying svc template to kubernetes server
+  template:
+    src: dex_svc.j2
+    dest: /tmp/dex_svc.yaml
+  when: py_ver2 is defined
+
+- name: Creating service for dex
+  k8s:
+    state: present
+    src: /tmp/dex_svc.yaml
+  when: py_ver3 is defined
+
+##############################################################
+

@@ -1,0 +1,12 @@
+---
+#- name: Calling helm3
+#  include_tasks: helm3.yaml
+
+- name: Including task for dex objects setup
+  include_tasks: dex_object_setup.yaml
+#  when: py_ver2 is defined
+
+#- name: Including task for py3
+#  include_tasks: dex_obj_py3.yaml
+#  when: py_ver3 is defined
+

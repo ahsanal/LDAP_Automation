@@ -1,0 +1,12 @@
+---
+###gw_configmap######
+api_ser_url: 
+url_https: "https://"
+url_http: "http://"
+domain_name: k8s-dex.na.msmps.net
+gangway_domain: k8s-gangway.na.msmps.net
+
+##Common################
+name_space: auth-system
+
+##

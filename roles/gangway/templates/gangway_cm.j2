@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gangway
+  namespace: "{{ name_space }}"
+data:
+  gangway.yaml: |
+    clusterName: "clkmaster"
+    apiServerURL: "{{ api_ser_url }}"
+    authorizeURL: "{{url_https}}{{domain_name}}/auth"
+    tokenURL: "{{url_https}}{{domain_name}}/token"
+    trustedCAPath: "/tmp/ca.crt"
+    idpCAPath: "/tmp/ca.crt"
+    clientID: "oidc-auth-client"
+    clientSecret: "M2zO5HBVmkhBUaKy+T/Z5xIa+ixZsUIENsUzM75GZ7o="
+    redirectURL: "{{url_http}}{{gangway_domain}}/callback"
+    scopes: ["openid", "profile", "email","groups","offline_access"]
+    usernameClaim: "email"
+    emailClaim: "email"

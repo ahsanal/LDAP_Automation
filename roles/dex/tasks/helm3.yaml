@@ -1,0 +1,31 @@
+#wget https://get.helm.sh/helm-v3.2.2-linux-amd64.tar.gz
+# tar -zxvf helm-v3.2.2-linux-amd64.tar.gz
+# mv linux-amd64/helm /usr/local/bin/
+---
+- name: Downloading the helm3 binary from internet 
+  get_url:
+    url: https://get.helm.sh/helm-v3.2.2-linux-amd64.tar.gz
+    dest: /tmp/ 
+    mode: '0755'
+
+- name: Unzipping the binary
+  unarchive: 
+    src: /tmp/helm-v3.2.2-linux-amd64.tar.gz
+    dest: /tmp/
+    remote_src: yes
+
+- name: Installing unzip package 
+  yum:
+    name: unzip
+    state: present
+
+- name: Moving the helm binary to path /usr/local/bin
+  copy:
+    src: /tmp/linux-amd64/helm
+    dest: /usr/local/bin/
+    mode: '0755'
+    remote_src: yes
+
+
+- name: Adding repo for helm
+  command: "helm repo add stable https://kubernetes-charts.storage.googleapis.com"  

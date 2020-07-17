@@ -1,0 +1,93 @@
+---
+- name: Downloading HELM binary
+  get_url:
+    url: https://get.helm.sh/helm-v3.2.2-linux-amd64.tar.gz
+    dest: /tmp/
+    mode: '0755'
+
+- name: Unzip the helm binary
+  unarchive: 
+    src: /tmp/helm-v3.2.2-linux-amd64.tar.gz
+    dest: /tmp/
+    remote_src: yes
+
+- name: Setting Current user name
+  set_fact:
+    current_user: "{{ ansible_user_id }}"
+
+- name: Making directory at user home/bin/
+  file:
+    path: "/home/{{ ansible_user_id }}/bin"
+    state: directory
+  when: "current_user != 'root'"
+#  when: ansible_facts['ansible_user_id'] == 'root'
+
+- name: Making directory at user home/bin/
+  file:
+    path: "/{{ ansible_user_id }}/bin"
+    state: directory
+  when: "current_user == 'root'"
+
+- name: Moving helm binary to home/{{ansible_user_id}}/bin path
+  copy:
+    src: /tmp/linux-amd64/helm
+    dest: "/home/{{ ansible_user_id }}/bin/helm3"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: '0755'
+    remote_src: yes
+  when: "current_user != 'root'"
+
+- name: Moving helm binary to home/{{ansible_user_id}}/bin path
+  copy:
+    src: /tmp/linux-amd64/helm
+    dest: "/{{ ansible_user_id }}/bin/helm3"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: '0755'
+    remote_src: yes
+  when: "current_user == 'root'"
+
+  
+  
+
+- name: Using shell module to export the path
+  shell: |
+     export PATH=$PATH:~/bin/
+     echo "export PATH=$PATH:~/bin/" >> ~/.bashrc 
+     source ~/.bashrc  
+     helm3 repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+  tags: "shel"
+  ignore_errors: true
+
+- name: Using shell module to export the path
+  shell: |
+     export PATH=$PATH:~/bin/
+     echo "export PATH=$PATH:~/bin/" >> ~/.bashrc
+     source ~/.bashrc
+     helm3 install nginx --set controller.metrics.enabled=true --set controller.hostPort.enabled=true --set controller.kind=DaemonSet  ingress-nginx/ingress-nginx --set controller.resources.limits.cpu=200m,controller.resources.limits.memory=500Mi,controller.resources.requests.cpu=200m,controller.resources.requests.memory=500Mi
+  ignore_errors: true
+  tags: "shel"
+
+- name: Adding helm3 repo to nginx
+  command: "helm3 repo add ingress-nginx https://kubernetes.github.io/ingress-nginx"
+  register: myval  
+#environment: 
+  #   PATH: "$PATH:/root/bin/"
+  tags: "exp"
+
+- debug: 
+   var: myval
+  tags: "shel"
+
+#- name: Adding env
+#  debug: 
+#   var: PATH
+#  environment: 
+#     PATH: amit
+#    #PATH: '$PATH:~/bin/'
+  tags: "test"
+
+#- debug: 
+#    var: The value of path is {{PATH}}
+#  tags: "test"

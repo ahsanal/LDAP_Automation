@@ -1,0 +1,4 @@
+---
+- name: including the task to create gangway objects
+  include_tasks: gangway_object.yaml
+

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: oauth2-proxy
+  name: oauth2-proxy
+  namespace: auth-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: oauth2-proxy
+  template:
+    metadata:
+      labels:
+        k8s-app: oauth2-proxy
+    spec:
+      containers:
+      - args:
+        - --cookie-secure=false
+        - --provider=oidc
+        - --client-id=oidc-auth-client
+        - --client-secret=M2zO5HBVmkhBUaKy+T/Z5xIa+ixZsUIENsUzM75GZ7o=
+        - --oidc-issuer-url=https://k8s-dex.na.msmps.net/
+        - --ssl-insecure-skip-verify=true
+        - --http-address=0.0.0.0:8080
+        - --upstream=file:///dev/null
+        - --email-domain=*
+        - --scope=openid profile email groups offline_access
+        - --set-authorization-header=true
+        env:
+        - name: OAUTH2_PROXY_COOKIE_SECRET
+          value: EfELr67A9c1tjwOECfR7yA==
+        image: bitnami/oauth2-proxy:6.0.0
+        imagePullPolicy: Always
+        name: oauth2-proxy
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+
