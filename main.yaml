@@ -16,7 +16,7 @@
    #     name: openshift
    #     state: present
   roles:
-    - role: dashboard ##gangway  ##ingress ##dex
+    - role: ingress ##dex ##dashboard ##gangway  
       vars: 
         py_ver2: py2
         ansible_python_interpreter: "/usr/bin/python"
@@ -26,7 +26,7 @@
   hosts: dex_p2
   become: true
   roles: 
-    - role: dashboard  ##gangway ##dex
+    - role: dex  ##dex ##dashboard  ##gangway 
       vars: 
-        py_ver3: py3
+        py_ver4: py3
         ansible_python_interpreter: "/usr/bin/python3"

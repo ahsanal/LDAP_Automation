@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gangway
+  namespace: auth-system
+data:
+  gangway.yaml: |
+    clusterName: "clkmaster"
+    apiServerURL: "https://172.31.114.44:6443"
+    authorizeURL: "https://172.31.114.44/auth"
+    tokenURL: "https://172.31.114.44/token"
+    trustedCAPath: "/tmp/ca.crt"
+    idpCAPath: "/tmp/ca.crt"
+    clientID: "oidc-auth-client"
+    clientSecret: "M2zO5HBVmkhBUaKy+T/Z5xIa+ixZsUIENsUzM75GZ7o="
+    redirectURL: "http://k8s-gangway.na.msmps.net/callback"
+    scopes: ["openid", "profile", "email","groups","offline_access"]
+    usernameClaim: "email"
+    emailClaim: "email"
+
